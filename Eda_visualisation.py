@@ -80,10 +80,20 @@ plt.show()
 
 # 7. Productivity Analysis
 df["Productivity Ratio"] = df["Production_tonnes"] / df["Area_Harvested"]
+
+# Filter out rows with NaN or infinite productivity ratios
+df = df[df["Productivity Ratio"].notna() & (df["Productivity Ratio"] != float("inf"))]
+
+# Calculate the top 10 crops by productivity
 top_prod_ratio = df.groupby("Item")["Productivity Ratio"].mean().sort_values(ascending=False).head(10)
 
+# Debug: print to verify data
+print("Top 10 Crops by Productivity:\n", top_prod_ratio)
+
+# Plot
 sns.barplot(x=top_prod_ratio.values, y=top_prod_ratio.index)
 plt.title("Top 10 Crops by Productivity (Production / Area)")
+plt.tight_layout()  # Makes sure labels are properly placed
 plt.show()
 
 # 8. Outlier Detection in Yield
@@ -91,33 +101,4 @@ plt.figure(figsize=(16, 6))
 sns.boxplot(data=df, x="Item", y="Yield_kg_per_ha")
 plt.xticks(rotation=90)
 plt.title("Outliers in Yield across Crops")
-plt.show()
-
-# 9. Distribution Plots
-plt.figure(figsize=(16, 6))
-sns.histplot(df["Area_Harvested"], bins=30, kde=True)
-plt.title("Distribution of Area Harvested")
-plt.xlabel("Area Harvested")
-plt.ylabel("Frequency")
-plt.show()
-
-plt.figure(figsize=(16, 6))
-sns.histplot(df["Yield_kg_per_ha"], bins=30, kde=True)
-plt.title("Distribution of Yield")
-plt.xlabel("Yield")
-plt.ylabel("Frequency")
-plt.show()
-
-plt.figure(figsize=(16, 6))
-sns.histplot(df["Production_tonnes"], bins=30, kde=True)
-plt.title("Distribution of Production")
-plt.xlabel("Production")
-plt.ylabel("Frequency")
-plt.show()
-
-plt.figure(figsize=(16, 6))
-sns.histplot(df["Productivity Ratio"], bins=30, kde=True)
-plt.title("Distribution of Productivity Ratio")
-plt.xlabel("Productivity Ratio")
-plt.ylabel("Frequency")
 plt.show()
